@@ -6,24 +6,38 @@ from sqlalchemy import create_engine
 from eralchemy2 import render_er
 
 Base = declarative_base()
+class User(Base):
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+    __tablename__ ='users'
+    id = Column(Integer, primary_key= True)
+    username = Column(String(250))
+    email = Column(String(200))
+    favorite_id = Column(Integer, ForeignKey('favorites.id'))
+    favorite = relationship("Favorite")
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+class Favorite(Base):
+    __tablename__='favorites'
+    id = Column(Integer, primary_key = True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    planet_id = Column(Integer, ForeignKey('planets.id'))
+    character_id = Column(Integer, ForeignKey('characters.id'))
+
+class Planet(Base):
+
+    __tablename__ = 'planets'
+    id = Column(Integer, primary_key = True)
+    name = Column(String(100))
+    terrain = Column(String(100))
+    population = Column(Integer)
+    climate = Column(String(100))
+
+class Character(Base):
+    __tablename__ = 'characters'
+    id = Column(Integer, primary_key = True)
+    name = Column(String(100))
+    gender = Column(String(50))
+    species = Column(String(100))
+    birth_year = Column(String(20))
 
     def to_dict(self):
         return {}
